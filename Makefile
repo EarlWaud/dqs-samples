@@ -47,5 +47,39 @@ env:
 
 run-env:
 	docker image inspect --format '{{json .Config}}' env-demo:1.0 | jq '.Env'
-	docker container run --rm env-demo:1.0 env
+	docker container run --rm --env changeMe="New Value" --env adhoc="run time"  env-demo:1.0 env
 
+arg1:
+	cd arg-demo && \
+	docker image build --rm --tag arg-demo:1.0 . 
+
+arg2:
+	cd arg-demo && \
+	docker image build --rm \
+	   --build-arg key1="buildTimeValue" \
+	   --build-arg key2="good till env instruction" \
+	   --tag arg-demo:2.0 .
+
+arg3:
+	cd arg3-demo && \
+	docker image build --rm \
+	   --build-arg username=35 \
+	   --build-arg appdir="/opt/hello" \
+	   --tag arg-demo:3.0 .
+
+run-arg1:
+	docker image inspect --format '{{json .Config}}' arg-demo:1.0 | jq '.Env'
+	docker container run --rm arg-demo:1.0 env
+
+run-arg2:
+	docker image inspect --format '{{json .Config}}' arg-demo:1.0 | jq '.Env'
+	docker container run --rm arg-demo:2.0 env
+
+run-arg3:
+	docker container run --rm --env lifecycle="test" arg-demo:3.0
+
+clean-arg1:
+	docker image rm arg-demo:1.0
+
+clean-arg2:
+	docker image rm arg-demo:2.0
