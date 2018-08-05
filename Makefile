@@ -1,7 +1,7 @@
 # samples for the Docker Quick Start guide
 
 all: build-all
-build-all:  from label copy add1 add2 add3
+build-all:  from label copy add1 add2 add3 env
 
 from: 
 	cd from-demo && \
@@ -10,6 +10,9 @@ from:
 label:
 	cd label-demo && \
 	docker image build --rm --tag label-demo:1.0 .
+
+run-label:
+	docker image inspect --format '{{json .Config}}' hello-earl:1.0.1 | jq '.Labels'
 
 copy:
 	cd copy-demo && \
@@ -26,3 +29,11 @@ add2:
 add3:
 	cd add3-demo && \
 	docker image build --rm --tag add-demo:3.0 .
+
+env:
+	cd env-demo && \
+	docker image build --rm --tag env-demo:1.0 .
+
+run-env:
+	docker image inspect --format '{{json .Config}}' env-demo:1.0 | jq '.Env'
+	docker container run --rm env-demo:1.0 env
