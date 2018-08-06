@@ -83,3 +83,10 @@ clean-arg1:
 
 clean-arg2:
 	docker image rm arg-demo:2.0
+
+user:
+	cd user-demo && \
+	docker image build --rm --tag user-demo:1.0 .
+
+run-user:
+	docker container run --rm user-demo:1.0 id
