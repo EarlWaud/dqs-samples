@@ -1,7 +1,7 @@
 # samples for the Docker Quick Start guide
 
 all: build-all
-build-all:  from label copy add1 add2 add3 env
+build-all:  from label copy add1 add2 add3 env arg1 arg2 arg3 user workdir run
 
 from: 
 	cd from-demo && \
@@ -90,3 +90,12 @@ user:
 
 run-user:
 	docker container run --rm user-demo:1.0 id
+
+workdir:
+	cd workdir-demo && \
+	docker image build --rm --tag workdir-demo:1.0 .
+
+run:
+	cd run-demo && \
+	docker image build --rm --tag run-demo:1.0 .
+

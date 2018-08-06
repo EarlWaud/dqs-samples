@@ -1,5 +1,6 @@
 FROM alpine
+LABEL maintainer="Earl Waud <earl@mycompany.com>"
 RUN id
-USER 35:35
+USER games:games
 run id
 CMD ["sh"]
