@@ -107,3 +107,26 @@ run-volume:
 	docker container run --rm -it \
 	   --mount source=myvolsrc,target=/myvol \
 	   volume-demo:1.0
+
+run-volume2:
+	docker volume ls
+	docker container run --rm -d --name vol-demo volume-demo:1.0 tail -f /dev/null
+	docker volume ls
+	docker container stop vol-demo
+	docker container ls
+
+run-volume3:
+	echo "This sample will NOT work on OSX"
+	docker container run --rm -d --name vol-demo \
+		--mount source=myvolsrc,target=/myvol \
+		volume-demo:1.0 tail -f /dev/null
+	docker volume ls
+	docker container exec vol-demo ls -l /myvol
+	docker volume inspect myvolsrc -f "{{json .Mountpoint}}"
+	$(eval retstr=$(shell docker volume inspect myvolsrc -f "{{json .Mountpoint}}"))
+	$(eval tmp=${retstr}/new-file.txt)
+	$(eval filename=$(subst $\",,${tmp}))
+	sudo touch ${filename}
+	docker container exec vol-demo ls -l /myvol
+	docker container stop vol-demo
+
