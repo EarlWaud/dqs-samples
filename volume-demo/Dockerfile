@@ -2,5 +2,5 @@
 FROM alpine
 RUN mkdir /myvol
 RUN echo "hello world" > /myvol/greeting
-VOLUME /myvol
+VOLUME ["myvolsrc:/myvol"]
 CMD ["sh"]

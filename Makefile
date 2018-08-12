@@ -129,4 +129,23 @@ run-volume3:
 	sudo touch ${filename}
 	docker container exec vol-demo ls -l /myvol
 	docker container stop vol-demo
+	docker volume rm myvolsrc
+
+run-volume4:
+	echo "This sample will NOT work on OSX"
+	docker volume create myvolsrc
+	docker container run -d --name vol-demo \
+		--mount source=myvolsrc,target=/myvol \
+		run-demo:1.0 tail -f /dev/null
+	docker container exec vol-demo ls -l /myvol
+	docker volume inspect myvolsrc -f "{{.Mountpoint}}"
+	$(eval retstr=$(shell docker volume inspect myvolsrc -f "{{.Mountpoint}}"))
+	echo "retstr: ${retstr}"
+	$(eval filename:=$(shell echo ${retstr}/new-file.txt))
+	echo "filename: ${filename}"
+	#sudo touch ${filename}
+	docker container exec vol-demo ls -l /myvol
+	docker container stop vol-demo
+	docker container rm vol-demo
+#	docker volume rm myvolsrc
 
