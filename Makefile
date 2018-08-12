@@ -103,7 +103,7 @@ volume:
 	cd volume-demo && \
 	docker image build --rm --tag volume-demo:1.0 .
 
-run-volume:
+run-volume1:
 	docker container run --rm -it \
 	   --mount source=myvolsrc,target=/myvol \
 	   volume-demo:1.0
@@ -135,4 +135,36 @@ run-volume3:
 	docker container rm vol-demo
 # this demo should remove the volume too
 #	docker volume rm myvolsrc
+
+expose:
+	cd expose-demo && \
+	docker image build --rm --tag expose-demo:1.0 .
+
+run-expose1:
+	@echo "****Dockerfile has EXPOSE, but not including -p in run"
+	docker container run --rm -d --name expose-demo-noports \
+	   expose-demo:1.0
+	@echo "****The port command will show no ports open"
+	docker port expose-demo-noports
+	docker container stop expose-demo-noports
+
+run-expose2:
+	@echo "****Dockerfile has EXPOSE, and we are including -p in run"
+	docker container run --rm -d --name expose-demo-withport80 \
+	   -p 8888:80 \
+	   expose-demo:1.0
+	@echo "****The port command will show port 80 open throuh host port 8888"
+	docker port expose-demo-withport80
+	@echo "****Testing the port with curl should show a response"
+	curl localhost:8888
+	docker container stop expose-demo-withport80
+
+run-expose3:
+	@echo "****Dockerfile has EXPOSE, and we are including -P in run"
+	docker container run --rm -d --name expose-demo-withallports \
+	   -P \
+	   expose-demo:1.0
+	@echo "****The port command should show ALL EXPOSE ports"
+	docker port expose-demo-withallports
+	docker container stop expose-demo-withallports
 
