@@ -1,7 +1,7 @@
 # samples for the Docker Quick Start guide
 
 all: build-all
-build-all:  from label copy add1 add2 add3 env arg1 arg2 arg3 user workdir run volume
+build-all:  from label copy add1 add2 add3 env arg1 arg2 arg3 user workdir run volume expose cmd entrypoint
 
 from: 
 	cd from-demo && \
@@ -99,6 +99,11 @@ run:
 	cd run-demo && \
 	docker image build --rm --tag run-demo:1.0 .
 
+run-run:
+	docker container run --rm -it \
+	   --name run-demo \
+	   run-demo:1.0
+
 volume:
 	cd volume-demo && \
 	docker image build --rm --tag volume-demo:1.0 .
@@ -167,4 +172,18 @@ run-expose3:
 	@echo "****The port command should show ALL EXPOSE ports"
 	docker port expose-demo-withallports
 	docker container stop expose-demo-withallports
+
+cmd:
+	cd cmd-demo && \
+	docker image build --rm --tag cmd-demo:1.0 .
+
+run-cmd:
+	docker container run --rm -it --name cmd-demo cmd-demo:1.0
+
+entrypoint:
+	cd entrypoint-demo && \
+	docker image build --rm --tag entrypoint-demo:1.0 .
+
+run-entrypoint:
+	docker container run --rm --name my-mkdir entrypoint-demo:1.0
 
