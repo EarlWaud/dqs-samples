@@ -1,3 +1,5 @@
-# RUN instruction Dockerfile for Docker Quick Start
-FROM ubuntu
-ENTRYPOINT ["mkdir", "--help"]
+# ENTRYPOINT instruction Dockerfile for Docker Quick Start
+FROM alpine
+RUN apk add curl
+ENTRYPOINT ["curl"]
+CMD ["--help"]

@@ -1,4 +1,5 @@
 # samples for the Docker Quick Start guide
+SHELL = bash
 
 all: build-all
 build-all:  from label copy add1 add2 add3 env arg1 arg2 arg3 user workdir run volume expose cmd entrypoint
@@ -123,11 +124,26 @@ run-volume2:
 
 run-volume3:
 	echo "This sample will NOT work on OSX"
-	docker volume create myvolsrc
+	$(eval rc=$(shell docker volume create myvolsrc))
 	docker container run -d --name vol-demo \
 		--mount source=myvolsrc,target=/myvol \
 		volume-demo:1.0 tail -f /dev/null
 	docker container exec vol-demo ls -l /myvol
+#	docker volume inspect myvolsrc -f "{{.Mountpoint}}"
+	$(eval retstr=$(shell docker volume inspect myvolsrc -f "{{.Mountpoint}}"))
+#	echo "retstr: ${retstr}"
+	$(eval filename:=$(shell echo ${retstr}/new-file.txt))
+#	echo "filename: ${filename}"
+# this is the key to this demo
+#	sudo touch ${filename}
+	docker container exec vol-demo ls -l /myvol
+	docker container stop vol-demo
+	docker container rm vol-demo
+	docker volume rm myvolsrc
+
+run-volume4:
+	echo "This sample will NOT work on OSX"
+	docker volume create myvolsrc
 	docker volume inspect myvolsrc -f "{{.Mountpoint}}"
 	$(eval retstr=$(shell docker volume inspect myvolsrc -f "{{.Mountpoint}}"))
 	echo "retstr: ${retstr}"
@@ -135,11 +151,7 @@ run-volume3:
 	echo "filename: ${filename}"
 # this is the key to this demo
 #	sudo touch ${filename}
-	docker container exec vol-demo ls -l /myvol
-	docker container stop vol-demo
-	docker container rm vol-demo
-# this demo should remove the volume too
-#	docker volume rm myvolsrc
+	docker volume rm myvolsrc
 
 expose:
 	cd expose-demo && \
