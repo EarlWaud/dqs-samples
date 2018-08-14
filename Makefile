@@ -123,7 +123,7 @@ run-volume2:
 	docker container ls
 
 run-volume3:
-	echo "This sample will NOT work on OSX"
+	@echo "***This sample will NOT work on OSX"
 	$(eval rc=$(shell docker volume create myvolsrc))
 	docker container run -d --name vol-demo \
 		--mount source=myvolsrc,target=/myvol \
@@ -133,6 +133,7 @@ run-volume3:
 	#@echo "retstr: ${retstr}"
 	$(eval filename:=$(shell echo ${retstr}/new-file.txt))
 	#@echo "filename: ${filename}"
+	@echo "***the touch command will fail on OSX"
 	sudo touch ${filename}
 	docker container exec vol-demo ls -l /myvol
 	docker container stop vol-demo
