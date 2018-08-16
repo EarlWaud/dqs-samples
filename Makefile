@@ -2,7 +2,7 @@
 SHELL = bash
 
 all: build-all
-build-all:  from label copy add1 add2 add3 env arg1 arg2 arg3 user workdir run volume expose cmd entrypoint
+build-all:  from label copy add1 add2 add3 env arg1 arg2 arg3 user workdir run volume expose cmd entrypoint entrypoint2 healthcheck onbuild
 
 from: 
 	cd from-demo && \
@@ -183,6 +183,29 @@ entrypoint:
 	cd entrypoint-demo && \
 	docker image build --rm --tag entrypoint-demo:1.0 .
 
+entrypoint2:
+	cd entrypoint2-demo && \
+	docker image build --rm --tag entrypoint-demo:2.0 .
+
 run-entrypoint:
 	docker container run --rm --name my-mkdir entrypoint-demo:1.0
 
+run-entrypoint2:
+	docker container run --rm --name my-ping entrypoint-demo:2.0
+	docker container run --rm --name my-ping entrypoint-demo:2.0 google.com
+
+healthcheck:
+	cd healthcheck-demo && \
+	docker image build --rm --tag healthcheck-demo:1.0 .
+
+run-healthcheck:
+	docker container run --rm -d -p 80:80 --name health healthcheck-demo:1.0
+
+onbuild:
+	cd onbuild-my-base-demo && \
+	docker image build --rm --tag my-base:1.0 .
+	cd onbuild-my-app-demo && \
+	docker image build --rm --tag my-app:1.0 .
+
+run-onbuild:
+	docker image inspect my-app:1.0
