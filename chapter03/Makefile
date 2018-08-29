@@ -8,21 +8,21 @@ from:
 	cd from-demo && \
 	docker image build --rm --tag from-demo:1.0 .
 
-run-from:
+run-from: from
 	docker container run --rm from-demo:1.0
 
 label:
 	cd label-demo && \
 	docker image build --rm --tag label-demo:1.0 .
 
-run-label:
+run-label: label
 	docker image inspect --format '{{json .Config}}' hello-earl:1.0.1 | jq '.Labels'
 
 copy:
 	cd copy-demo && \
 	docker image build --rm --tag copy-demo:1.0 .
 
-run-copy:
+run-copy: copy
 	docker container run --rm copy-demo:1.0 ls -l -R theqsg
 
 add1:
@@ -37,7 +37,7 @@ add3:
 	cd add3-demo && \
 	docker image build --rm --tag add-demo:3.0 .
 
-run-add:
+run-add: add1 add2 add3
 	docker container run --rm add-demo:1.0 ls -l -R theqsg
 	docker container run --rm add-demo:2.0 ls -l -R theqsg
 	docker container run --rm add-demo:3.0
@@ -46,7 +46,7 @@ env:
 	cd env-demo && \
 	docker image build --rm --tag env-demo:1.0 .
 
-run-env:
+run-env: env
 	docker image inspect --format '{{json .Config}}' env-demo:1.0 | jq '.Env'
 	docker container run --rm --env changeMe="New Value" --env adhoc="run time"  env-demo:1.0 env
 
@@ -68,15 +68,15 @@ arg3:
 	   --build-arg appdir="/opt/hello" \
 	   --tag arg-demo:3.0 .
 
-run-arg1:
+run-arg1: arg1
 	docker image inspect --format '{{json .Config}}' arg-demo:1.0 | jq '.Env'
 	docker container run --rm arg-demo:1.0 env
 
-run-arg2:
+run-arg2: arg2
 	docker image inspect --format '{{json .Config}}' arg-demo:1.0 | jq '.Env'
 	docker container run --rm arg-demo:2.0 env
 
-run-arg3:
+run-arg3: arg3
 	docker container run --rm --env lifecycle="test" arg-demo:3.0
 
 clean-arg1:
@@ -89,7 +89,7 @@ user:
 	cd user-demo && \
 	docker image build --rm --tag user-demo:1.0 .
 
-run-user:
+run-user: user
 	docker container run --rm user-demo:1.0 id
 
 workdir:
@@ -100,7 +100,7 @@ run:
 	cd run-demo && \
 	docker image build --rm --tag run-demo:1.0 .
 
-run-run:
+run-run: run
 	docker container run --rm -it \
 	   --name run-demo \
 	   run-demo:1.0
@@ -109,12 +109,12 @@ volume:
 	cd volume-demo && \
 	docker image build --rm --tag volume-demo:1.0 .
 
-run-volume1:
+run-volume1: volume
 	docker container run --rm -it \
 	   --mount source=myvolsrc,target=/myvol \
 	   volume-demo:1.0
 
-run-volume2:
+run-volume2: volume
 	docker volume ls
 	docker container run --rm -d --name vol-demo \
 	   volume-demo:1.0 tail -f /dev/null
@@ -122,7 +122,7 @@ run-volume2:
 	docker container stop vol-demo
 	docker container ls
 
-run-volume3:
+run-volume3: volume
 	@echo "***This sample will NOT work on OSX"
 	$(eval rc=$(shell docker volume create myvolsrc))
 	docker container run -d --name vol-demo \
@@ -144,7 +144,7 @@ expose:
 	cd expose-demo && \
 	docker image build --rm --tag expose-demo:1.0 .
 
-run-expose1:
+run-expose1: expose
 	@echo "****Dockerfile has EXPOSE, but not including -p in run"
 	docker container run --rm -d --name expose-demo-noports \
 	   expose-demo:1.0
@@ -152,7 +152,7 @@ run-expose1:
 	docker port expose-demo-noports
 	docker container stop expose-demo-noports
 
-run-expose2:
+run-expose2: expose
 	@echo "****Dockerfile has EXPOSE, and we are including -p in run"
 	docker container run --rm -d --name expose-demo-withport80 \
 	   -p 8888:80 \
@@ -163,7 +163,7 @@ run-expose2:
 	curl localhost:8888
 	docker container stop expose-demo-withport80
 
-run-expose3:
+run-expose3: expose
 	@echo "****Dockerfile has EXPOSE, and we are including -P in run"
 	docker container run --rm -d --name expose-demo-withallports \
 	   -P \
@@ -176,7 +176,7 @@ cmd:
 	cd cmd-demo && \
 	docker image build --rm --tag cmd-demo:1.0 .
 
-run-cmd:
+run-cmd: cmd
 	docker container run --rm -it --name cmd-demo cmd-demo:1.0
 
 entrypoint:
@@ -187,10 +187,10 @@ entrypoint2:
 	cd entrypoint2-demo && \
 	docker image build --rm --tag entrypoint-demo:2.0 .
 
-run-entrypoint:
+run-entrypoint: entrypoint
 	docker container run --rm --name my-mkdir entrypoint-demo:1.0
 
-run-entrypoint2:
+run-entrypoint2: entrypoint2
 	docker container run --rm --name my-ping entrypoint-demo:2.0
 	docker container run --rm --name my-ping entrypoint-demo:2.0 google.com
 
@@ -198,7 +198,7 @@ healthcheck:
 	cd healthcheck-demo && \
 	docker image build --rm --tag healthcheck-demo:1.0 .
 
-run-healthcheck:
+run-healthcheck: healthcheck
 	docker container run --rm -d -p 80:80 --name health healthcheck-demo:1.0
 
 onbuild:
@@ -207,5 +207,5 @@ onbuild:
 	cd onbuild-my-app-demo && \
 	docker image build --rm --tag my-app:1.0 .
 
-run-onbuild:
+run-onbuild: onbuild
 	docker image inspect my-app:1.0
