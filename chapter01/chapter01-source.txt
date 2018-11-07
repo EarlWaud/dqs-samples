@@ -118,11 +118,17 @@ sudo sh get-docker.sh
 # add the current user to the docker group
 sudo usermod -aG docker $USER
 
+# logout and back in as you normally would to pick up the group change
+# I am using pkill just for the demo
+sudo pkill -u $USER
+
 # validate that sudo is no longer needed
 docker run hello-world
 
 # install docker-compose
 sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+
+# add execute permissions to docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 # Installing Docker on a Windows workstation
