@@ -96,6 +96,9 @@ workdir:
 	cd workdir-demo && \
 	docker image build --rm --tag workdir-demo:1.0 .
 
+run-workdir: workdir
+	docker container run --rm workdir-demo:1.0 pwd
+
 run:
 	cd run-demo && \
 	docker image build --rm --tag run-demo:1.0 .
