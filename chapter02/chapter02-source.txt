@@ -182,7 +182,7 @@ docker container run -it --name web-server2 nginx bash
 docker container run -it --name earls-dev ubuntu
 
 # run a container detached
-docker container run --detach --name web-server1 -p 80:80 nginx
+docker container run --detach -it --name web-server1 -p 80:80 nginx
 
 # show that the container is running
 docker container ps
