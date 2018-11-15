@@ -52,9 +52,9 @@ docker container rm hi-earl hi-earl2
 # An example using the force command to remove it:
 docker container rm --force web-server
 
-#Some times, you may want to remove all of the containers on your system, running or not. Here is the command:
+# Some times, you may want to remove all of the containers on your system, running or not. Here is the command:
+# first list all container command
 docker container ls --all --quiet
-
 # Now we can feed the values returned by the container list command as input parameters to the container remove command. It will look like this:
 # using full parameter names
 docker container rm --force $(docker container ls --all --quiet)
@@ -105,7 +105,6 @@ docker container top web-server
 # using the old syntax
 docker top web-server
 As you might expect, the container top command is only useful for viewing the processes of a single container at a time.
-
 
 # The Container Inspect command
 # using the new syntax
