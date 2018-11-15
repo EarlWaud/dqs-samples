@@ -16,7 +16,7 @@ label:
 	docker image build --rm --tag label-demo:1.0 .
 
 run-label: label
-	docker image inspect --format '{{json .Config}}' hello-earl:1.0.1 | jq '.Labels'
+	docker image inspect --format '{{json .Config}}' label-demo:1.0 | jq '.Labels'
 
 copy:
 	cd copy-demo && \
