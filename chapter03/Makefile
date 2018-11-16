@@ -4,7 +4,7 @@ SHELL = bash
 all: build-all
 build-all:  from label copy add1 add2 add3 env arg1 arg2 arg3 user workdir run volume expose cmd entrypoint entrypoint2 healthcheck onbuild
 
-from: 
+from:
 	cd from-demo && \
 	docker image build --rm --tag from-demo:1.0 .
 
