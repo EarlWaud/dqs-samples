@@ -18,7 +18,7 @@ Usage: docker volume create [OPTIONS] [VOLUME]
 -o, --opt map               # Set driver specific options (default map[])
 
 # Using the volume create command with no optional parameters
-docker volume create 
+docker volume create
 
 # Create a volume with a fancy name
 docker volume create my-vol-02

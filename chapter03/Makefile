@@ -52,21 +52,15 @@ run-env: env
 
 arg1:
 	cd arg-demo && \
-	docker image build --rm --tag arg-demo:1.0 . 
+	docker image build --rm --tag arg-demo:1.0 .
 
 arg2:
 	cd arg-demo && \
-	docker image build --rm \
-	   --build-arg key1="buildTimeValue" \
-	   --build-arg key2="good till env instruction" \
-	   --tag arg-demo:2.0 .
+	docker image build --rm --build-arg key1="buildTimeValue" --build-arg key2="good till env instruction" --tag arg-demo:2.0 .
 
 arg3:
 	cd arg3-demo && \
-	docker image build --rm \
-	   --build-arg username=35 \
-	   --build-arg appdir="/opt/hello" \
-	   --tag arg-demo:3.0 .
+	docker image build --rm --build-arg username=35 --build-arg appdir="/opt/hello" --tag arg-demo:3.0 .
 
 run-arg1: arg1
 	docker image inspect --format '{{json .Config}}' arg-demo:1.0 | jq '.Env'
@@ -113,14 +107,11 @@ volume:
 	docker image build --rm --tag volume-demo:1.0 .
 
 run-volume1: volume
-	docker container run --rm -it \
-	   --mount source=myvolsrc,target=/myvol \
-	   volume-demo:1.0
+	docker container run --rm -it --mount source=myvolsrc,target=/myvol volume-demo:1.0
 
 run-volume2: volume
 	docker volume ls
-	docker container run --rm -d --name vol-demo \
-	   volume-demo:1.0 tail -f /dev/null
+	docker container run --rm -d --name vol-demo volume-demo:1.0 tail -f /dev/null
 	docker volume ls
 	docker container stop vol-demo
 	docker container ls
@@ -128,9 +119,7 @@ run-volume2: volume
 run-volume3: volume
 	@echo "***This sample will NOT work on OSX"
 	$(eval rc=$(shell docker volume create myvolsrc))
-	docker container run -d --name vol-demo \
-		--mount source=myvolsrc,target=/myvol \
-		volume-demo:1.0 tail -f /dev/null
+	docker container run -d --name vol-demo --mount source=myvolsrc,target=/myvol volume-demo:1.0 tail -f /dev/null
 	docker container exec vol-demo ls -l /myvol
 	$(eval retstr=$(shell docker volume inspect myvolsrc -f "{{.Mountpoint}}"))
 	#@echo "retstr: ${retstr}"
